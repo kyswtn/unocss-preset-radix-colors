@@ -1,10 +1,14 @@
 {
   "name": "unocss-preset-radix-colors",
   "description": "UnoCSS preset to use Radix color palette",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "type": "module",
-  "files": ["index.js", "radix.js", "types.d.ts"],
+  "files": [
+    "index.js",
+    "radix.js",
+    "types.d.ts"
+  ],
   "exports": {
     ".": {
       "types": "./types.d.ts",
