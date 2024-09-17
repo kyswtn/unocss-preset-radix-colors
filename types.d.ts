@@ -85,6 +85,16 @@ export type PresetRadixColorOptions = {
    * Aliases to generate.
    */
   aliases?: Record<string, Color>
+  /**
+   * Generate `prose-radix-[color]` rules for `@unocss/preset-typography`.
+   * @default false
+   */
+  typography?: boolean | undefined
+  /**
+   * Use custom selector for `@unocss/preset-typography`. Only works if `typography` is also enabled.
+   * @default 'prose'
+   */
+  typographySelector?: string
 }
 
 export function presetRadixColors(options: PresetRadixColorOptions): import('unocss').Preset<object>

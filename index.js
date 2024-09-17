@@ -16,11 +16,13 @@ export function presetRadixColors(options) {
     p3 = true,
     foregrounds: _foregrounds,
     aliases = {},
+    typography = false,
+    typographySelector = 'prose',
   } = options
 
-  const validatedColorNames = [...new Set(colorNames)].filter((colorName) =>
-    radix.colors.includes(colorName),
-  )
+  const validatedColorNames = [...new Set(colorNames)]
+    .filter((colorName) => radix.colors.includes(colorName))
+    .map((color) => /** @type {string} */ (color))
 
   const fgPrefix = 'fg-'
 
@@ -107,13 +109,43 @@ export function presetRadixColors(options) {
 
   const colorMappings = Object.fromEntries(
     validatedColorNames
-      .map((color) => [/** @type {string} */ (color), color])
+      .map((color) => [color, color])
       .concat(Object.entries(aliases))
       .map(([name, color]) => [name, getAllVarMappings(color)]),
   )
 
+  /**
+   * @type {import('unocss/index.js').Rule[]}
+   */
+  const rules = []
+
+  if (typography) {
+    rules.push([
+      new RegExp(`^${typographySelector}-radix-([-\\w]+)$`),
+      ([, color]) => {
+        if (!validatedColorNames.includes(color)) return
+
+        return {
+          '--un-prose-body': `var(--${prefix}${color}12)`,
+          '--un-prose-headings': `var(--${prefix}${color}12)`,
+          '--un-prose-links': `var(--${prefix}${color}11)`,
+          '--un-prose-lists': `var(--${prefix}${color}11)`,
+          '--un-prose-hr': `var(--${prefix}${color}8)`,
+          '--un-prose-captions': `var(--${prefix}${color}11)`,
+          '--un-prose-code': `var(--${prefix}${color}12)`,
+          '--un-prose-borders': `var(--${prefix}${color}6)`,
+          '--un-prose-bg-soft': `var(--${prefix}${color}3)`,
+
+          // invert colors (dark mode)
+          // todo:
+        }
+      },
+    ])
+  }
+
   return {
     name: 'unocss-preset-radix-colors',
+    rules,
     extendTheme: (theme) => ({
       ...theme,
       colors: {
